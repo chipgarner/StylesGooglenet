@@ -1,0 +1,5 @@
+/frames
+/output
+/ImagesIn
+*.pyc
+*.caffemodel
