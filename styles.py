@@ -18,7 +18,7 @@ class Styles:
         nm = txt[len(txt) - 1].split('.')
         name = nm[0]
 
-        f = "PycharmProjects/GooglenetStyles/frames/" + str(index) + '_' + name + '_' + end.replace('/', '-') + ".jpg"
+        f = "frames/" + str(index) + '_' + name + '_' + end.replace('/', '-') + ".jpg"
         pimg.save(f, 'jpeg')
         print f
 
@@ -79,52 +79,18 @@ class Styles:
 
         src.data[0] = self.__blur(src.data[0], sigma)
 
-    def __take_steps(self, net, sigma, step_size, style_data, subject_data, layers):
-        # Forward goes from bottom to top, backward goes from top to bottom
-        top = layers
+    def __take_steps(self, net, sigma, step_size, style_data, subject_data, layer):
+        top = layer
 
         net.forward(end=top)
 
-        self.__objective_guide(net.blobs[top], subject_data[0], style_data[0])
-
-        # bottom = 'conv4_1'
-        # net.backward(start=top, end=bottom)
-        # self.__gradient_ascent(net.blobs[bottom], sigma, step_size)
-        #
-        # top = 'conv4_1'
-        #
-        # self.__objective_guide(net.blobs[top], subject_data[3], style_data[3])
-        #
-        # bottom = 'conv3_1'
-        # net.backward(start=top, end=bottom)
-        # self.__gradient_ascent(net.blobs[bottom], sigma, step_size)
-        #
-        # top = 'conv3_1'
-        #
-        # self.__objective_guide(net.blobs[top], subject_data[2], style_data[2])
-        #
-        # bottom = 'conv2_1'
-        # net.backward(start=top, end=bottom)
-        # self.__gradient_ascent(net.blobs[top], sigma, step_size)
-        #
-        # top = 'conv2_1'
-        #
-        # self.__objective_guide(net.blobs[top], subject_data[1], style_data[1])
-
-        # This one is too big, 4 MB (?)
-        # bottom = 'conv1_1'
-        # net.backward(start=top, end=bottom)
-        # self.__gradient_ascent(net.blobs[top], sigma, step_size)
-        #
-        # top = 'conv1_1'
-        #
-        # self.__objective_guide(net.blobs[top], subject_data[0], style_data[0])
+        self.__objective_guide(net.blobs[top], subject_data, style_data)
 
         bottom = None
         net.backward(start=top, end=bottom)
         self.__gradient_ascent(net.blobs['data'], sigma, step_size)
 
-    def content_plus_style(self, net, iterator, style_data, subject_data, layers):
+    def content_plus_style(self, net, iterator, style_data, subject_data, layer):
 
         im = images.Images()
 
@@ -134,10 +100,10 @@ class Styles:
                 sigma = o['start_sigma'] + ((o['end_sigma'] - o['start_sigma']) * i) / o['iter_n']
                 step_size = o['start_step_size'] + ((o['end_step_size'] - o['start_step_size']) * i) / o['iter_n']
 
-                self.__take_steps(net, sigma, step_size, style_data, subject_data, layers)
+                self.__take_steps(net, sigma, step_size, style_data, subject_data, layer)
 
                 vis = im.visualize_src(net)
-                self.__save_result(i, '', layers, vis)
+                self.__save_result(i, '', layer, vis)
 
             display.Display().showResultPIL(vis)
             return vis

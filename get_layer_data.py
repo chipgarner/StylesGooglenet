@@ -8,17 +8,14 @@ def k_from_v(dictionary, val):
     return None
 
 
-def get_layers_data(net, img_path, layers):
+def get_layers_data(net, img_path, layer):
     im = images.Images()
     im.load_image(net, img_path)
     print 'loaded image'
 
-    net.forward(end=layers)
+    net.forward(end=layer)
 
     print 'went forward'
-    layers_data = []
+    layer_data = net.blobs[layer].data[0].copy()
 
-    # for i in range(0, len(layers)):
-    layers_data.append(net.blobs[layers].data[0].copy())
-
-    return layers_data
+    return layer_data
