@@ -58,6 +58,6 @@ class TestStyles(TestCase):
         self.assertFalse(style_data.shape == subject_data.shape)
 
         test_vis = np.load('test/test2_result.npy')
-        assert np.allclose(vis, test_vis, 0.01)
+        assert np.allclose(vis, test_vis, 0.02)
 
 

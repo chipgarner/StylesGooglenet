@@ -3,3 +3,5 @@
 /ImagesIn
 *.pyc
 *.caffemodel
+*.jpg
+.idea/workspace.xml

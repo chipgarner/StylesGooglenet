@@ -50,8 +50,7 @@ class Styles:
         x = np.reshape(x, (ch, -1))
         y = np.reshape(y, (ch, -1))
         A = np.dot(x.T, y)  # compute the matrix of dot-products with guide features
-        print str(A.shape)
-        print str(dst.diff[0].shape)
+
         dst.diff[0].reshape(ch, -1)[:] = y[:, A.argmax(1)]  # select ones that match best
         dst.diff[:] += dst.data  # this makes more network stuff appear
 
